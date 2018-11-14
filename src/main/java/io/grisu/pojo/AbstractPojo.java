@@ -229,8 +229,15 @@ public class AbstractPojo implements Pojo {
 
    private Method findGetter(Object name) {
       try {
-         String propertyName = mapOfFields.get(name).getName();
-         return this.getClass().getDeclaredMethod("get" + capitalizeString(propertyName));
+         Field field = mapOfFields.get(name);
+         String capitalizedPropertyName = capitalizeString(field.getName());
+         if (Boolean.class.isAssignableFrom(field.getType())) {
+            try {
+               return this.getClass().getDeclaredMethod("is" + capitalizedPropertyName);
+            } catch (NoSuchMethodException e) {
+            }
+         }
+         return this.getClass().getDeclaredMethod("get" + capitalizedPropertyName);
       } catch (Exception e) {
          return null;
       }

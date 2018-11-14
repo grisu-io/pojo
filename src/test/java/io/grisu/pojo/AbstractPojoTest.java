@@ -3,6 +3,7 @@ package io.grisu.pojo;
 import java.util.UUID;
 
 import io.grisu.pojo.supportingclasses.MyTestingClass;
+import io.grisu.pojo.supportingclasses.PojoForPropertyNames;
 import io.grisu.pojo.utils.PojoUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class AbstractPojoTest {
    @Test
    public void shouldReturnOneChangedProperty() {
       final UUID key = UUID.randomUUID();
-      MyTestingClass a = (MyTestingClass) ((MyTestingClass)new MyTestingClass().put("key", key)).put("value", "value");
+      MyTestingClass a = (MyTestingClass) ((MyTestingClass) new MyTestingClass().put("key", key)).put("value", "value");
       a.__resetHashes();
       a.setValueColumn("new value");
       Assert.assertEquals(1, PojoUtils.changedProperties(a).size());
@@ -75,4 +76,15 @@ public class AbstractPojoTest {
       Assert.assertEquals(0, PojoUtils.changedProperties(a).size());
    }
 
+   @Test
+   public void shouldAccessABooleanFromIsProperty() {
+      PojoForPropertyNames pojoForPropertyNames = new PojoForPropertyNames().setCool(true);
+      Assert.assertTrue((Boolean) pojoForPropertyNames.get("cool"));
+   }
+
+   @Test
+   public void shouldAccessABooleanFromGetter() {
+      PojoForPropertyNames pojoForPropertyNames = new PojoForPropertyNames().setLessCool(true);
+      Assert.assertTrue((Boolean) pojoForPropertyNames.get("lessCool"));
+   }
 }
