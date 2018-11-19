@@ -27,7 +27,8 @@ public class AnotherPojo extends AbstractPojo {
       return dummyVar;
    }
 
-   public void setDummyVar(String dummyVar) {
+   public AnotherPojo setDummyVar(String dummyVar) {
       this.dummyVar = dummyVar;
+      return this;
    }
 }

@@ -80,8 +80,9 @@ public class MyTestingClass extends AbstractPojo {
       return pojo;
    }
 
-   public void setPojo(AnotherPojo pojo) {
+   public MyTestingClass setPojo(AnotherPojo pojo) {
       this.pojo = pojo;
+      return this;
    }
 
    public List<AnotherPojo> getListOfPojos() {

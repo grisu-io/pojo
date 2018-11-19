@@ -1,10 +1,13 @@
 package io.grisu.pojo;
 
+import java.util.Date;
 import java.util.UUID;
 
+import io.grisu.pojo.supportingclasses.AnotherPojo;
 import io.grisu.pojo.supportingclasses.MyTestingClass;
 import io.grisu.pojo.supportingclasses.PojoForPropertyNames;
 import io.grisu.pojo.utils.PojoUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -87,4 +90,29 @@ public class AbstractPojoTest {
       PojoForPropertyNames pojoForPropertyNames = new PojoForPropertyNames().setLessCool(true);
       Assert.assertTrue((Boolean) pojoForPropertyNames.get("lessCool"));
    }
+
+   @Test
+   public void shouldTestEquality() {
+      Assert.assertEquals(new MyTestingClass(), new MyTestingClass());
+
+      final UUID uuid = UUID.randomUUID();
+      Assert.assertEquals(new MyTestingClass().setKeyColumn(uuid), new MyTestingClass().setKeyColumn(uuid));
+      Assert.assertNotEquals(new MyTestingClass().setKeyColumn(uuid), new MyTestingClass().setKeyColumn(UUID.randomUUID()));
+
+      final String string = "test String";
+      Assert.assertEquals(new MyTestingClass().setValueColumn(string), new MyTestingClass().setValueColumn(string));
+      Assert.assertNotEquals(new MyTestingClass().setValueColumn(string), new MyTestingClass().setValueColumn("another"));
+
+      final AnotherPojo anotherPojo = new AnotherPojo().setDummyVar("dd");
+      final AnotherPojo anotherPojo2 = new AnotherPojo().setDummyVar("dd");
+      Assert.assertEquals(new MyTestingClass().setPojo(anotherPojo), new MyTestingClass().setPojo(anotherPojo2));
+      Assert.assertNotEquals(new MyTestingClass().setPojo(anotherPojo),new AnotherPojo());
+
+      final Date date = new Date();
+      final Date date2 = new Date();
+      date2.setTime(1);
+      Assert.assertEquals(new MyTestingClass().setCreatedAt(date), new MyTestingClass().setCreatedAt(date));
+      Assert.assertNotEquals(new MyTestingClass().setCreatedAt(date), new MyTestingClass().setCreatedAt(date2));
+   }
+
 }
