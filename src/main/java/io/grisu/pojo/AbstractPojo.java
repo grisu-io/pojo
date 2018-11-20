@@ -213,6 +213,7 @@ public class AbstractPojo implements Pojo {
     public int hashCode() {
         return properties.stream()
             .map(this::__computeHash)
+            .filter(i -> i != null)
             .reduce(17, (a, b) -> 31 * a + b);
     }
 

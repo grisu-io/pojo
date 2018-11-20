@@ -115,4 +115,10 @@ public class AbstractPojoTest {
       Assert.assertNotEquals(new MyTestingClass().setCreatedAt(date), new MyTestingClass().setCreatedAt(date2));
    }
 
+   @Test
+   public void shouldTestHashCodeForNulls() {
+      final MyTestingClass myTestingClass = new MyTestingClass().setValueColumn("v");
+      Assert.assertNotNull(myTestingClass.hashCode());
+   }
+
 }
