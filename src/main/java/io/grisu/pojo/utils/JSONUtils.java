@@ -36,6 +36,7 @@ public class JSONUtils {
       return new String(encode(param));
    }
 
+   @SuppressWarnings("unchecked")
    public static <T> T decode(byte[] bytes, Type type) {
       try {
          Class _clazz = null;

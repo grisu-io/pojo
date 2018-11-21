@@ -15,7 +15,7 @@ public class PojoToMapTests {
       TestPojo testPojo = new TestPojo();
       testPojo.setString("value");
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals("value", convert.get("string"));
@@ -27,7 +27,7 @@ public class PojoToMapTests {
       UUID uuid = UUID.randomUUID();
       testPojo.setUuid(uuid);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(uuid, convert.get("uuid"));
@@ -39,7 +39,7 @@ public class PojoToMapTests {
       Date date = new Date();
       testPojo.setDate(date);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(date, convert.get("date"));
@@ -51,7 +51,7 @@ public class PojoToMapTests {
       Long number = 2L;
       testPojo.setNumber(number);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(number, convert.get("number"));
@@ -67,7 +67,7 @@ public class PojoToMapTests {
 
       testPojo.setListOfStringByInterface(list);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(list, convert.get("listOfStringByInterface"));
@@ -83,7 +83,7 @@ public class PojoToMapTests {
 
       testPojo.setListOfStringByClass(list);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(list, convert.get("listOfStringByClass"));
@@ -99,7 +99,7 @@ public class PojoToMapTests {
 
       testPojo.setSetOfStringByInterface(set);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(set, convert.get("setOfStringByInterface"));
@@ -115,7 +115,7 @@ public class PojoToMapTests {
 
       testPojo.setSetOfStringByClass(set);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(set, convert.get("setOfStringByClass"));
@@ -130,7 +130,7 @@ public class PojoToMapTests {
 
       testPojo.setSetOfEnumByInterface(set);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(set, convert.get("setOfEnumByInterface"));
@@ -145,7 +145,7 @@ public class PojoToMapTests {
 
       testPojo.setSetOfEnumByClass(set);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals(set, convert.get("setOfEnumByClass"));
@@ -159,7 +159,7 @@ public class PojoToMapTests {
 
       testPojo.setMapOfStringByInterface(map);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals("inner pojo", ((Map) ((Map) convert.get("mapOfStringByInterface")).get("k1")).get("string"));
@@ -173,7 +173,7 @@ public class PojoToMapTests {
 
       testPojo.setInner(list);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(1, convert.keySet().size());
       assertEquals("inner pojo", ((Map) ((List) convert.get("inner")).get(0)).get("string"));
@@ -181,7 +181,7 @@ public class PojoToMapTests {
 
    @Test
    public void shouldConvertPojoListOfTypeAttributeIntoMap() {
-      TestPojo<String> testPojo = new TestPojo();
+      TestPojo<String> testPojo = new TestPojo<>();
       ArrayList<String> list = new ArrayList<>();
       list.add("str1");
       list.add("str2");
@@ -189,7 +189,7 @@ public class PojoToMapTests {
 
       testPojo.setListOfType(list);
 
-      final Map<String, Object> convert = (Map<String, Object>) PojoToMap.convert(testPojo);
+      final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
       assertEquals(2, convert.keySet().size());
       assertEquals(list, convert.get("listOfType"));

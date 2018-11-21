@@ -11,38 +11,38 @@ import io.grisu.pojo.Pojo;
 import io.grisu.pojo.utils.ReflectionUtils;
 
 public class PojoToMap {
-
-   public static Object convert(Object o) {
+   @SuppressWarnings("unchecked")
+   public static <U> U convert(Object o) {
       if (o == null) {
          return null;
       }
 
       if (o instanceof Object[]) {
-         return Arrays.stream((Object[]) o)
+         return (U) Arrays.stream((Object[]) o)
             .map(PojoToMap::convert)
             .collect(Collectors.toList())
             .toArray(new Object[] {});
       }
 
       if (o instanceof Pojo) {
-         return convert((Pojo) o);
+         return (U) convert((Pojo) o);
       }
 
       if (o instanceof List) {
-         return ((Collection<?>) o).stream().map(i -> convert(i)).collect(Collectors.toList());
+         return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toList());
       }
 
       if (o instanceof Set) {
-         return ((Collection<?>) o).stream().map(i -> convert(i)).collect(Collectors.toSet());
+         return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toSet());
       }
 
       if (o instanceof Map) {
-         return ((Map<?, ?>) o).keySet().stream()
+         return (U) ((Map<?, ?>) o).keySet().stream()
             .filter(k -> ((Map) o).get(k) != null)
             .collect(Collectors.toMap(k -> k, k -> convert(((Map) o).get(k))));
       }
 
-      return o;
+      return (U) o;
    }
 
    private static <T extends Pojo> Map<String, Object> convert(T pojo) {
@@ -64,7 +64,7 @@ public class PojoToMap {
             final List<Type> actualTypeArguments = Stream.of(((ParameterizedType) propertyType).getActualTypeArguments())
                .collect(Collectors.toList());
 
-            if (actualTypeArguments.stream().filter(type -> type instanceof TypeVariable).count() > 0) {
+            if (actualTypeArguments.stream().anyMatch(type -> type instanceof TypeVariable)) {
 
                String __types = null;
                if (Collection.class.isAssignableFrom(value.getClass())) {
