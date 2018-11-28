@@ -1,16 +1,16 @@
 package io.grisu.pojo.utils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import io.grisu.pojo.supportingclasses.*;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 
 public class PojoUtilsTest {
 
@@ -75,6 +75,18 @@ public class PojoUtilsTest {
 
       assertFalse(testPojo == clonePojo);
       Assert.assertEquals(testPojo, clonePojo);
+   }
+
+   @Test
+   public void shouldReturnOnlyNullKeys() {
+      final MyTestingClass myTestingClass = new MyTestingClass().setKeyColumn(UUID.randomUUID());
+      Assert.assertEquals(5, PojoUtils.checkForNullProperties(myTestingClass, "key", "value", "date", "roles", "pojo", "list").size());
+   }
+
+   @Test
+   public void shouldReturnNoKeys() {
+      final MyTestingClass myTestingClass = new MyTestingClass().setKeyColumn(UUID.randomUUID());
+      Assert.assertEquals(0, PojoUtils.checkForNullProperties(myTestingClass, "key").size());
    }
 
 }

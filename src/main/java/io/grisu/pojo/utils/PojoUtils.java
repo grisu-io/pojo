@@ -3,18 +3,15 @@ package io.grisu.pojo.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.Gettable;
 import io.grisu.pojo.Pojo;
 import io.grisu.pojo.Puttable;
 import io.grisu.pojo.annotations.Property;
-import io.grisu.pojo.AbstractPojo;
 
 public class PojoUtils {
 
@@ -118,4 +115,22 @@ public class PojoUtils {
       return to;
    }
 
+   public static Set<String> checkForNullProperties(Pojo pojo, String... keys) {
+      Collection<String> k;
+      if (keys != null && keys.length > 0) {
+         k = new ArrayList<>();
+         Collections.addAll(k, keys);
+      } else {
+         k = pojo.keySet();
+      }
+
+      if (pojo != null) {
+         return pojo.keySet()
+            .stream()
+            .filter(key -> pojo.get(key) == null && k.contains(key))
+            .collect(Collectors.toSet());
+      }
+
+      return null;
+   }
 }

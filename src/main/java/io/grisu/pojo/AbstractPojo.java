@@ -48,12 +48,12 @@ public class AbstractPojo implements Pojo {
                     try {
                         serializers.put(name, this.getClass().getDeclaredMethod("_" + name + "Out", field.getType()));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.debug(e.getMessage());
                     }
                     try {
                         deserializers.put(name, this.getClass().getDeclaredMethod("_" + name + "In", serializedValueClass));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.debug(e.getMessage());
                     }
                     mapOfTypes.put(name, serializedValueClass);
                 } else {
