@@ -8,7 +8,7 @@
 
   <packaging>jar</packaging>
 
-  <name>Grisu Core</name>
+  <name>Grisu Pojo</name>
   <description>This is the core library of the Grisu framework</description>
   <url>https://grisu.io</url>
   <developers>
