@@ -1,6 +1,7 @@
 package io.grisu.pojo.serializer;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import io.grisu.pojo.supportingclasses.TestPojo;
@@ -206,7 +207,7 @@ public class PojoToMapTests {
         final Map<String, Object> convert = PojoToMap.convert(testPojo);
 
         assertEquals(1, convert.keySet().size());
-        assertEquals(localDate, convert.get("localDate"));
+        assertEquals(localDate.format(DateTimeFormatter.ISO_DATE), convert.get("localDate"));
     }
 
 }
