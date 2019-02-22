@@ -2,6 +2,6 @@ package io.grisu.pojo;
 
 public interface Gettable {
 
-   Object get(Object name);
+    Object get(Object name);
 
 }

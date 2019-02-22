@@ -1,175 +1,187 @@
 package io.grisu.pojo.supportingclasses;
 
+import java.time.LocalDate;
 import java.util.*;
 
-import io.grisu.pojo.annotations.Property;
 import io.grisu.pojo.AbstractPojo;
+import io.grisu.pojo.annotations.Property;
 
 public class TestPojo<T> extends AbstractPojo {
 
-   @Property(name = "string")
-   private String string;
+    @Property(name = "string")
+    private String string;
 
-   @Property(name = "uuid")
-   private UUID uuid;
+    @Property(name = "uuid")
+    private UUID uuid;
 
-   @Property(name = "date")
-   private Date date;
+    @Property(name = "date")
+    private Date date;
 
-   @Property(name = "number")
-   private Long number;
+    @Property(name = "number")
+    private Long number;
 
-   @Property(name = "userStatus")
-   private UserStatus userStatus;
+    @Property(name = "userStatus")
+    private UserStatus userStatus;
 
-   @Property(name = "listOfStringByInterface")
-   private List<String> listOfStringByInterface;
+    @Property(name = "localDate")
+    private LocalDate localDate;
 
-   @Property(name = "listOfStringByClass")
-   private ArrayList<String> listOfStringByClass;
+    @Property(name = "listOfStringByInterface")
+    private List<String> listOfStringByInterface;
 
-   @Property(name = "setOfStringByInterface")
-   private Set<String> setOfStringByInterface;
+    @Property(name = "listOfStringByClass")
+    private ArrayList<String> listOfStringByClass;
 
-   @Property(name = "setOfStringByClass")
-   private HashSet<String> setOfStringByClass;
+    @Property(name = "setOfStringByInterface")
+    private Set<String> setOfStringByInterface;
 
-   @Property(name = "setOfEnumByInterface")
-   private Set<UserStatus> setOfEnumByInterface;
+    @Property(name = "setOfStringByClass")
+    private HashSet<String> setOfStringByClass;
 
-   @Property(name = "setOfEnumByClass")
-   private HashSet<UserStatus> setOfEnumByClass;
+    @Property(name = "setOfEnumByInterface")
+    private Set<UserStatus> setOfEnumByInterface;
 
-   @Property(name = "mapOfStringByInterface")
-   private Map<String, Object> mapOfStringByInterface;
+    @Property(name = "setOfEnumByClass")
+    private HashSet<UserStatus> setOfEnumByClass;
 
-   @Property(name = "mapOfStringByClass")
-   private LinkedHashMap<String, Object> mapOfStringByClass;
+    @Property(name = "mapOfStringByInterface")
+    private Map<String, Object> mapOfStringByInterface;
 
-   @Property(name = "inner")
-   private List<TestPojo> inner;
+    @Property(name = "mapOfStringByClass")
+    private LinkedHashMap<String, Object> mapOfStringByClass;
 
-   @Property(name = "listOfType")
-   private List<T> listOfType;
+    @Property(name = "inner")
+    private List<TestPojo> inner;
 
-   public String getString() {
-      return string;
-   }
+    @Property(name = "listOfType")
+    private List<T> listOfType;
 
-   public TestPojo setString(String property) {
-      this.string = property;
-      return this;
-   }
+    public String getString() {
+        return string;
+    }
 
-   public UUID getUuid() {
-      return uuid;
-   }
+    public TestPojo setString(String property) {
+        this.string = property;
+        return this;
+    }
 
-   public void setUuid(UUID uuid) {
-      this.uuid = uuid;
-   }
+    public UUID getUuid() {
+        return uuid;
+    }
 
-   public Date getDate() {
-      return date;
-   }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
-   public void setDate(Date date) {
-      this.date = date;
-   }
+    public Date getDate() {
+        return date;
+    }
 
-   public Long getNumber() {
-      return number;
-   }
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-   public void setNumber(Long number) {
-      this.number = number;
-   }
+    public Long getNumber() {
+        return number;
+    }
 
-   public UserStatus getUserStatus() {
-      return userStatus;
-   }
+    public void setNumber(Long number) {
+        this.number = number;
+    }
 
-   public void setUserStatus(UserStatus userStatus) {
-      this.userStatus = userStatus;
-   }
+    public UserStatus getUserStatus() {
+        return userStatus;
+    }
 
-   public List<String> getListOfStringByInterface() {
-      return listOfStringByInterface;
-   }
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
 
-   public void setListOfStringByInterface(List<String> listOfStringByInterface) {
-      this.listOfStringByInterface = listOfStringByInterface;
-   }
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
 
-   public ArrayList<String> getListOfStringByClass() {
-      return listOfStringByClass;
-   }
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
 
-   public void setListOfStringByClass(ArrayList<String> listOfStringByClass) {
-      this.listOfStringByClass = listOfStringByClass;
-   }
+    public List<String> getListOfStringByInterface() {
+        return listOfStringByInterface;
+    }
 
-   public Set<String> getSetOfStringByInterface() {
-      return setOfStringByInterface;
-   }
+    public void setListOfStringByInterface(List<String> listOfStringByInterface) {
+        this.listOfStringByInterface = listOfStringByInterface;
+    }
 
-   public void setSetOfStringByInterface(Set<String> setOfStringByInterface) {
-      this.setOfStringByInterface = setOfStringByInterface;
-   }
+    public ArrayList<String> getListOfStringByClass() {
+        return listOfStringByClass;
+    }
 
-   public HashSet<String> getSetOfStringByClass() {
-      return setOfStringByClass;
-   }
+    public void setListOfStringByClass(ArrayList<String> listOfStringByClass) {
+        this.listOfStringByClass = listOfStringByClass;
+    }
 
-   public void setSetOfStringByClass(HashSet<String> setOfStringByClass) {
-      this.setOfStringByClass = setOfStringByClass;
-   }
+    public Set<String> getSetOfStringByInterface() {
+        return setOfStringByInterface;
+    }
 
-   public Set<UserStatus> getSetOfEnumByInterface() {
-      return setOfEnumByInterface;
-   }
+    public void setSetOfStringByInterface(Set<String> setOfStringByInterface) {
+        this.setOfStringByInterface = setOfStringByInterface;
+    }
 
-   public void setSetOfEnumByInterface(Set<UserStatus> setOfEnumByInterface) {
-      this.setOfEnumByInterface = setOfEnumByInterface;
-   }
+    public HashSet<String> getSetOfStringByClass() {
+        return setOfStringByClass;
+    }
 
-   public HashSet<UserStatus> getSetOfEnumByClass() {
-      return setOfEnumByClass;
-   }
+    public void setSetOfStringByClass(HashSet<String> setOfStringByClass) {
+        this.setOfStringByClass = setOfStringByClass;
+    }
 
-   public void setSetOfEnumByClass(HashSet<UserStatus> setOfEnumByClass) {
-      this.setOfEnumByClass = setOfEnumByClass;
-   }
+    public Set<UserStatus> getSetOfEnumByInterface() {
+        return setOfEnumByInterface;
+    }
 
-   public Map<String, Object> getMapOfStringByInterface() {
-      return mapOfStringByInterface;
-   }
+    public void setSetOfEnumByInterface(Set<UserStatus> setOfEnumByInterface) {
+        this.setOfEnumByInterface = setOfEnumByInterface;
+    }
 
-   public void setMapOfStringByInterface(Map<String, Object> mapOfStringByInterface) {
-      this.mapOfStringByInterface = mapOfStringByInterface;
-   }
+    public HashSet<UserStatus> getSetOfEnumByClass() {
+        return setOfEnumByClass;
+    }
 
-   public HashMap<String, Object> getMapOfStringByClass() {
-      return mapOfStringByClass;
-   }
+    public void setSetOfEnumByClass(HashSet<UserStatus> setOfEnumByClass) {
+        this.setOfEnumByClass = setOfEnumByClass;
+    }
 
-   public void setMapOfStringByClass(LinkedHashMap<String, Object> mapOfStringByClass) {
-      this.mapOfStringByClass = mapOfStringByClass;
-   }
+    public Map<String, Object> getMapOfStringByInterface() {
+        return mapOfStringByInterface;
+    }
 
-   public List<TestPojo> getInner() {
-      return inner;
-   }
+    public void setMapOfStringByInterface(Map<String, Object> mapOfStringByInterface) {
+        this.mapOfStringByInterface = mapOfStringByInterface;
+    }
 
-   public void setInner(List<TestPojo> inner) {
-      this.inner = inner;
-   }
+    public HashMap<String, Object> getMapOfStringByClass() {
+        return mapOfStringByClass;
+    }
 
-   public List<T> getListOfType() {
-      return listOfType;
-   }
+    public void setMapOfStringByClass(LinkedHashMap<String, Object> mapOfStringByClass) {
+        this.mapOfStringByClass = mapOfStringByClass;
+    }
 
-   public void setListOfType(List<T> listOfType) {
-      this.listOfType = listOfType;
-   }
+    public List<TestPojo> getInner() {
+        return inner;
+    }
+
+    public void setInner(List<TestPojo> inner) {
+        this.inner = inner;
+    }
+
+    public List<T> getListOfType() {
+        return listOfType;
+    }
+
+    public void setListOfType(List<T> listOfType) {
+        this.listOfType = listOfType;
+    }
 }

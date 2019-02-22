@@ -3,6 +3,8 @@ package io.grisu.pojo.serializer;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,76 +13,80 @@ import io.grisu.pojo.Pojo;
 import io.grisu.pojo.utils.ReflectionUtils;
 
 public class PojoToMap {
-   @SuppressWarnings("unchecked")
-   public static <U> U convert(Object o) {
-      if (o == null) {
-         return null;
-      }
+    @SuppressWarnings("unchecked")
+    public static <U> U convert(Object o) {
+        if (o == null) {
+            return null;
+        }
 
-      if (o instanceof Object[]) {
-         return (U) Arrays.stream((Object[]) o)
-            .map(PojoToMap::convert)
-            .collect(Collectors.toList())
-            .toArray(new Object[] {});
-      }
+        if (o instanceof Object[]) {
+            return (U) Arrays.stream((Object[]) o)
+                .map(PojoToMap::convert)
+                .collect(Collectors.toList())
+                .toArray(new Object[] {});
+        }
 
-      if (o instanceof Pojo) {
-         return (U) convert((Pojo) o);
-      }
+        if (o instanceof Pojo) {
+            return (U) convert((Pojo) o);
+        }
 
-      if (o instanceof List) {
-         return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toList());
-      }
+        if (o instanceof List) {
+            return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toList());
+        }
 
-      if (o instanceof Set) {
-         return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toSet());
-      }
+        if (o instanceof Set) {
+            return (U) ((Collection<?>) o).stream().map(PojoToMap::convert).collect(Collectors.toSet());
+        }
 
-      if (o instanceof Map) {
-         return (U) ((Map<?, ?>) o).keySet().stream()
-            .filter(k -> ((Map) o).get(k) != null)
-            .collect(Collectors.toMap(k -> k, k -> convert(((Map) o).get(k))));
-      }
+        if (o instanceof Map) {
+            return (U) ((Map<?, ?>) o).keySet().stream()
+                .filter(k -> ((Map) o).get(k) != null)
+                .collect(Collectors.toMap(k -> k, k -> convert(((Map) o).get(k))));
+        }
 
-      return (U) o;
-   }
+        if (o instanceof LocalDate) {
+            return (U) ((LocalDate) o).format(DateTimeFormatter.ISO_DATE);
+        }
 
-   private static <T extends Pojo> Map<String, Object> convert(T pojo) {
+        return (U) o;
+    }
 
-      final Collection<String> props = pojo.keySet()
-         .stream()
-         .filter(p -> pojo.get(p) != null)
-         .collect(Collectors.toList());
+    private static <T extends Pojo> Map<String, Object> convert(T pojo) {
 
-      Map<String, Object> outputMap = new HashMap<>();
+        final Collection<String> props = pojo.keySet()
+            .stream()
+            .filter(p -> pojo.get(p) != null)
+            .collect(Collectors.toList());
 
-      props.forEach(p -> {
-         Object value = pojo.get(p);
-         outputMap.put(p, convert(value));
+        Map<String, Object> outputMap = new HashMap<>();
 
-         Type propertyType = pojo.__getTypeOf(p);
+        props.forEach(p -> {
+            Object value = pojo.get(p);
+            outputMap.put(p, convert(value));
 
-         if (propertyType instanceof ParameterizedType) {
-            final List<Type> actualTypeArguments = Stream.of(((ParameterizedType) propertyType).getActualTypeArguments())
-               .collect(Collectors.toList());
+            Type propertyType = pojo.__getTypeOf(p);
 
-            if (actualTypeArguments.stream().anyMatch(type -> type instanceof TypeVariable)) {
+            if (propertyType instanceof ParameterizedType) {
+                final List<Type> actualTypeArguments = Stream.of(((ParameterizedType) propertyType).getActualTypeArguments())
+                    .collect(Collectors.toList());
 
-               String __types = null;
-               if (Collection.class.isAssignableFrom(value.getClass())) {
-                  __types = ReflectionUtils.guessBestClass((Collection) value, actualTypeArguments.get(0)).getName();
-               } else if (Map.class.isAssignableFrom(value.getClass())) {
-                  __types = ReflectionUtils.guessBestClass(((Map) value).keySet(), actualTypeArguments.get(0)).getName() + "," +
-                     ReflectionUtils.guessBestClass(((Map) value).values(), actualTypeArguments.get(1)).getName();
-               }
+                if (actualTypeArguments.stream().anyMatch(type -> type instanceof TypeVariable)) {
 
-               outputMap.put(p + "__java_reification", __types);
+                    String __types = null;
+                    if (Collection.class.isAssignableFrom(value.getClass())) {
+                        __types = ReflectionUtils.guessBestClass((Collection) value, actualTypeArguments.get(0)).getName();
+                    } else if (Map.class.isAssignableFrom(value.getClass())) {
+                        __types = ReflectionUtils.guessBestClass(((Map) value).keySet(), actualTypeArguments.get(0)).getName() + "," +
+                            ReflectionUtils.guessBestClass(((Map) value).values(), actualTypeArguments.get(1)).getName();
+                    }
+
+                    outputMap.put(p + "__java_reification", __types);
+                }
             }
-         }
 
-      });
+        });
 
-      return outputMap;
-   }
+        return outputMap;
+    }
 
 }

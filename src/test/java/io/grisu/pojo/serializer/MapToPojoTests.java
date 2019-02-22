@@ -2,6 +2,7 @@ package io.grisu.pojo.serializer;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.*;
 
 import io.grisu.pojo.supportingclasses.TestPojo;
@@ -32,6 +33,16 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
 
         assertEquals(uuid, convert.getUuid());
+    }
+
+    @Test
+    public void shouldConvertLocalDateAttributeIntoPojo() {
+        LocalDate localDate = LocalDate.of(1972, 9, 1);
+        Map<String, Object> map = new HashMap<>();
+        map.put("localDate", localDate);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+        assertEquals(localDate, convert.getLocalDate());
     }
 
     @Test

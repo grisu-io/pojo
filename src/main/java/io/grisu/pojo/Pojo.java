@@ -5,12 +5,12 @@ import java.util.Set;
 
 public interface Pojo extends Gettable, Puttable {
 
-   Set<String> keySet();
+    Set<String> keySet();
 
-   Type __getTypeOf(String property);
+    Type __getTypeOf(String property);
 
-   boolean __hasChanged(String property);
+    boolean __hasChanged(String property);
 
-   void __resetHashes();
+    void __resetHashes();
 
 }

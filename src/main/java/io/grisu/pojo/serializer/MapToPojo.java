@@ -2,6 +2,8 @@ package io.grisu.pojo.serializer;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,6 +51,14 @@ public class MapToPojo {
                 return UUID.fromString((String) value);
             } else if (_clazz.equals(Date.class)) {
                 return new Date((long) value);
+            } else if (_clazz.equals(LocalDate.class)) {
+                if (value instanceof Map) {
+                    Map map = (Map) value;
+                    return LocalDate.of((int) map.get("year"), (int) map.get("monthValue"), (int) map.get("dayOfMonth"));
+                }
+                if (value instanceof String) {
+                    return LocalDate.parse((CharSequence) value, DateTimeFormatter.ISO_DATE);
+                }
             } else if (_clazz.equals(Integer.class)) {
                 return (value instanceof String) ? Integer.parseInt((String) value) : ((Number) value).intValue();
             } else if (_clazz.equals(Long.class)) {

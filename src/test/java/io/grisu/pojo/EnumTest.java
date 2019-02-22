@@ -19,4 +19,5 @@ public class EnumTest {
 
         Assert.assertEquals(TestEnum2.A, pojoB.getEnumeration2());
     }
+
 }

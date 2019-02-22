@@ -3,7 +3,7 @@ package io.grisu.pojo.supportingclasses;
 import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.annotations.Property;
 
-public class EnumTestPojoB  extends AbstractPojo {
+public class EnumTestPojoB extends AbstractPojo {
 
     @Property(name = "property", serializer = true, serializerClass = TestEnum.class)
     private TestEnum2 enumeration2;

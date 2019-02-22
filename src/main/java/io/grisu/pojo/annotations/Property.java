@@ -6,8 +6,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Property {
-   String name();
-   boolean serializer() default false;
-   Class serializerClass() default String.class;
-   String value() default "";
+    String name();
+
+    boolean serializer() default false;
+
+    Class serializerClass() default String.class;
+
+    String value() default "";
 }
