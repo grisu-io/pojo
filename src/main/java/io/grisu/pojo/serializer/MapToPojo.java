@@ -50,7 +50,9 @@ public class MapToPojo {
             } else if (_clazz.equals(UUID.class)) {
                 return UUID.fromString((String) value);
             } else if (_clazz.equals(Date.class)) {
-                return new Date((long) value);
+                if (value instanceof Number) {
+                    return new Date(((Number)value).longValue());
+                }
             } else if (_clazz.equals(LocalDate.class)) {
                 if (value instanceof Map) {
                     Map map = (Map) value;

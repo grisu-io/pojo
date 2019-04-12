@@ -57,6 +57,16 @@ public class MapToPojoTests {
     }
 
     @Test
+    public void shouldConvertMapZeroDateAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("date", 0);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertEquals(new Date(0), convert.getDate());
+    }
+
+    @Test
     public void shouldConvertMapNumberAttributeIntoPojo() {
         Long number = 2L;
         Map<String, Object> map = new HashMap<>();
