@@ -62,7 +62,7 @@
   <scm>
     <url>https://github.com/grisu-io/pojo</url>
     <connection>scm:git:git@github.com:grisu-io/pojo.git</connection>
-    <tag>1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
