@@ -71,7 +71,10 @@ public class JSONUtils {
          final List<Object> params = jsonMapper.readValue(bytes, List.class);
 
          if (params.size() != types.length) {
-            throw new IllegalArgumentException(format("Wrong parameters size. Requested = %d, actual = %d", types.length, params.size()));
+             throw new IllegalArgumentException(
+                 format(
+                     "Wrong parameters size. Requested = %d, actual = %d",
+                     types.length, params.size()));
          }
 
          for (int i = 0; i < types.length; i++) {
