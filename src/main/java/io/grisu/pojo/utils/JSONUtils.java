@@ -14,6 +14,8 @@ import io.grisu.pojo.Pojo;
 import io.grisu.pojo.serializer.MapToPojo;
 import io.grisu.pojo.serializer.PojoToMap;
 
+import static java.lang.String.format;
+
 public class JSONUtils {
 
    protected static final ObjectMapper jsonMapper;
@@ -67,6 +69,13 @@ public class JSONUtils {
 
       try {
          final List<Object> params = jsonMapper.readValue(bytes, List.class);
+
+         if (params.size() != types.length) {
+            throw new IllegalArgumentException(format(
+                "Wrong parameters size. Requested = %d, actual = %d",
+                types.length, params.size()));
+         }
+
          for (int i = 0; i < types.length; i++) {
             final Object o = MapToPojo.convert(params.get(i), types[i]);
             outList.add(o);
