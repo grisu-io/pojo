@@ -1,5 +1,6 @@
 package io.grisu.pojo.utils;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -162,4 +163,19 @@ public class JSONUtilsTests {
         assertEquals(LocalDate.of(1972, 9, 1), decodedParams[0]);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeAsParamsShouldCheckSignature_1() {
+        JSONUtils.decodeAsParams(
+            "[\"aaa\", \"bbb\", \"ccc\"]".getBytes(),
+            new Type[] { String.class, String.class }
+        );
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decodeAsParamsShouldCheckSignature_2() {
+        JSONUtils.decodeAsParams(
+            "[\"aaa\", \"bbb\"]".getBytes(),
+            new Type[] { String.class, String.class, String.class }
+        );
+    }
 }
