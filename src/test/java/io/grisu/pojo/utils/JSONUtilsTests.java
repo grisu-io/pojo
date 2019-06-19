@@ -1,11 +1,13 @@
 package io.grisu.pojo.utils;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 import io.grisu.pojo.supportingclasses.NodeSubType;
 import io.grisu.pojo.supportingclasses.PagedResult;
 import io.grisu.pojo.supportingclasses.ParameterizedPojo;
 import io.grisu.pojo.supportingclasses.TestPojo;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -151,4 +153,19 @@ public class JSONUtilsTests {
       assertTrue(((Set) decodedParams[7]).contains("str3"));
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public void decodeAsParamsShouldCheckSignature_1() {
+      JSONUtils.decodeAsParams(
+          "[\"aaa\", \"bbb\", \"ccc\"]".getBytes(),
+          new Type[] {String.class, String.class}
+      );
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void decodeAsParamsShouldCheckSignature_2() {
+      JSONUtils.decodeAsParams(
+          "[\"aaa\", \"bbb\"]".getBytes(),
+          new Type[] {String.class, String.class, String.class}
+      );
+   }
 }
