@@ -1,0 +1,8 @@
+<aspectj>
+  <aspects>
+    <aspect name="io.grisu.pojo.annotations.PropertyMethodAspect"/>
+    <weaver options="-verbose -showWeaveInfo">
+      <include within="*"/>
+    </weaver>
+  </aspects>
+</aspectj>
