@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.Pojo;
 import io.grisu.pojo.utils.ReflectionUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
@@ -97,7 +98,7 @@ public class MapToPojo {
         T newObject = null;
 
         try {
-            newObject = (T) pojoClass.getConstructor().newInstance();
+            newObject = (T) AbstractPojo.instance(pojoClass);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

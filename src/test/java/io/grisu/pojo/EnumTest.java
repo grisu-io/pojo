@@ -13,7 +13,7 @@ public class EnumTest {
     @Test
     public void shouldCopyTwoDifferentEnumTypes() {
 
-        EnumTestPojoA pojoA = new EnumTestPojoA().setEnumeration(TestEnum.A);
+        EnumTestPojoA pojoA =AbstractPojo.instance(EnumTestPojoA.class).setEnumeration(TestEnum.A);
 
         EnumTestPojoB pojoB = PojoUtils.instancePojoFrom(EnumTestPojoB.class, pojoA);
 

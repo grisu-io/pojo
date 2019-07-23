@@ -7,6 +7,7 @@ import java.util.*;
 
 import io.grisu.pojo.supportingclasses.TestPojo;
 import io.grisu.pojo.supportingclasses.UserStatus;
+import io.grisu.pojo.utils.PojoUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.Test;
 
@@ -228,10 +229,10 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, type);
 
         assertEquals(3, convert.getListOfType().size());
-        assertEquals(TestPojo.class, convert.getListOfType().get(0).getClass());
+        assertEquals(TestPojo.class, PojoUtils.getCGLibUnwrappedClass(convert.getListOfType().get(0).getClass()));
         assertEquals("inner pojo", ((TestPojo) convert.getListOfType().get(0)).getString());
-        assertEquals(TestPojo.class, convert.getListOfType().get(1).getClass());
-        assertEquals(TestPojo.class, convert.getListOfType().get(2).getClass());
+        assertEquals(TestPojo.class, PojoUtils.getCGLibUnwrappedClass(convert.getListOfType().get(1).getClass()));
+        assertEquals(TestPojo.class, PojoUtils.getCGLibUnwrappedClass(convert.getListOfType().get(2).getClass()));
     }
 
 }

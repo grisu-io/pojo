@@ -17,7 +17,7 @@ public class AbstractPojoTest {
 
     @Test
     public void getFieldTypes() {
-        MyTestingClass myTestingClass = new MyTestingClass();
+        MyTestingClass myTestingClass = AbstractPojo.instance(MyTestingClass.class);
         Assert.assertEquals(UUID.class, myTestingClass.__getTypeOf("key"));
         Assert.assertEquals(String.class, myTestingClass.__getTypeOf("value"));
     }
@@ -25,30 +25,30 @@ public class AbstractPojoTest {
     @Test
     public void shouldTwoEntitiesBeEqual() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = new MyTestingClass().setKeyColumn(key).setValueColumn("value");
-        MyTestingClass b = new MyTestingClass().setKeyColumn(key).setValueColumn("value");
+        MyTestingClass a = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("value");
+        MyTestingClass b = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("value");
         assertTrue(a.equals(b));
     }
 
     @Test
     public void shouldTwoEntitiesNotEqual() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = new MyTestingClass().setKeyColumn(key).setValueColumn("value");
-        MyTestingClass b = new MyTestingClass().setKeyColumn(key).setValueColumn("eulav");
+        MyTestingClass a = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("value");
+        MyTestingClass b = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("eulav");
         assertFalse(a.equals(b));
     }
 
     @Test
     public void shouldEntityNotEqualToNull() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = new MyTestingClass().setKeyColumn(key).setValueColumn("value");
+        MyTestingClass a = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("value");
         assertFalse(a.equals(null));
     }
 
     @Test
     public void shouldNotReturnAnyChangedProperty() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = new MyTestingClass();
+        MyTestingClass a = AbstractPojo.instance(MyTestingClass.class);
         Assert.assertEquals(0, PojoUtils.changedProperties(a).size());
     }
 
@@ -72,7 +72,7 @@ public class AbstractPojoTest {
     @Test
     public void shouldResetChangedProperties() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = (MyTestingClass) new MyTestingClass().put("key", key);
+        MyTestingClass a = (MyTestingClass) AbstractPojo.instance(MyTestingClass.class).put("key", key);
         a.setValueColumn("new value");
         a.__resetHashes();
         Assert.assertEquals(0, PojoUtils.changedProperties(a).size());
@@ -80,43 +80,43 @@ public class AbstractPojoTest {
 
     @Test
     public void shouldAccessABooleanFromIsProperty() {
-        PojoForPropertyNames pojoForPropertyNames = new PojoForPropertyNames().setCool(true);
+        PojoForPropertyNames pojoForPropertyNames = AbstractPojo.instance(PojoForPropertyNames.class).setCool(true);
         Assert.assertTrue((Boolean) pojoForPropertyNames.get("cool"));
     }
 
     @Test
     public void shouldAccessABooleanFromGetter() {
-        PojoForPropertyNames pojoForPropertyNames = new PojoForPropertyNames().setLessCool(true);
+        PojoForPropertyNames pojoForPropertyNames = AbstractPojo.instance(PojoForPropertyNames.class).setLessCool(true);
         Assert.assertTrue((Boolean) pojoForPropertyNames.get("lessCool"));
     }
 
     @Test
     public void shouldTestEquality() {
-        Assert.assertEquals(new MyTestingClass(), new MyTestingClass());
+        Assert.assertEquals(AbstractPojo.instance(MyTestingClass.class), AbstractPojo.instance(MyTestingClass.class));
 
         final UUID uuid = UUID.randomUUID();
-        Assert.assertEquals(new MyTestingClass().setKeyColumn(uuid), new MyTestingClass().setKeyColumn(uuid));
-        Assert.assertNotEquals(new MyTestingClass().setKeyColumn(uuid), new MyTestingClass().setKeyColumn(UUID.randomUUID()));
+        Assert.assertEquals(AbstractPojo.instance(MyTestingClass.class).setKeyColumn(uuid), AbstractPojo.instance(MyTestingClass.class).setKeyColumn(uuid));
+        Assert.assertNotEquals(AbstractPojo.instance(MyTestingClass.class).setKeyColumn(uuid), AbstractPojo.instance(MyTestingClass.class).setKeyColumn(UUID.randomUUID()));
 
         final String string = "test String";
-        Assert.assertEquals(new MyTestingClass().setValueColumn(string), new MyTestingClass().setValueColumn(string));
-        Assert.assertNotEquals(new MyTestingClass().setValueColumn(string), new MyTestingClass().setValueColumn("another"));
+        Assert.assertEquals(AbstractPojo.instance(MyTestingClass.class).setValueColumn(string), AbstractPojo.instance(MyTestingClass.class).setValueColumn(string));
+        Assert.assertNotEquals(AbstractPojo.instance(MyTestingClass.class).setValueColumn(string), AbstractPojo.instance(MyTestingClass.class).setValueColumn("another"));
 
-        final AnotherPojo anotherPojo = new AnotherPojo().setDummyVar("dd");
-        final AnotherPojo anotherPojo2 = new AnotherPojo().setDummyVar("dd");
-        Assert.assertEquals(new MyTestingClass().setPojo(anotherPojo), new MyTestingClass().setPojo(anotherPojo2));
-        Assert.assertNotEquals(new MyTestingClass().setPojo(anotherPojo), new AnotherPojo());
+        final AnotherPojo anotherPojo = AbstractPojo.instance(AnotherPojo.class).setDummyVar("dd");
+        final AnotherPojo anotherPojo2 = AbstractPojo.instance(AnotherPojo.class).setDummyVar("dd");
+        Assert.assertEquals(AbstractPojo.instance(MyTestingClass.class).setPojo(anotherPojo), AbstractPojo.instance(MyTestingClass.class).setPojo(anotherPojo2));
+        Assert.assertNotEquals(AbstractPojo.instance(MyTestingClass.class).setPojo(anotherPojo), AbstractPojo.instance(AnotherPojo.class));
 
         final Date date = new Date();
         final Date date2 = new Date();
         date2.setTime(1);
-        Assert.assertEquals(new MyTestingClass().setCreatedAt(date), new MyTestingClass().setCreatedAt(date));
-        Assert.assertNotEquals(new MyTestingClass().setCreatedAt(date), new MyTestingClass().setCreatedAt(date2));
+        Assert.assertEquals(AbstractPojo.instance(MyTestingClass.class).setCreatedAt(date), AbstractPojo.instance(MyTestingClass.class).setCreatedAt(date));
+        Assert.assertNotEquals(AbstractPojo.instance(MyTestingClass.class).setCreatedAt(date), AbstractPojo.instance(MyTestingClass.class).setCreatedAt(date2));
     }
 
     @Test
     public void shouldTestHashCodeForNulls() {
-        final MyTestingClass myTestingClass = new MyTestingClass().setValueColumn("v");
+        final MyTestingClass myTestingClass = AbstractPojo.instance(MyTestingClass.class).setValueColumn("v");
         Assert.assertNotNull(myTestingClass.hashCode());
     }
 

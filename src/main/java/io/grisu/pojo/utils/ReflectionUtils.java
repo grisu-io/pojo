@@ -19,7 +19,7 @@ public class ReflectionUtils {
                     return Object.class;
                 }
 
-                Class _clazz = p.getClass();
+                Class _clazz = PojoUtils.getCGLibUnwrappedClass(p.getClass());
 
                 if (Pojo.class.isAssignableFrom(_clazz)) {
                     return _clazz;
@@ -95,6 +95,8 @@ public class ReflectionUtils {
         }
 
         try {
+
+
             return instanceClass.getConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);

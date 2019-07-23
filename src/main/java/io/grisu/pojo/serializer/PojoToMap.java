@@ -80,6 +80,9 @@ public class PojoToMap {
                             ReflectionUtils.guessBestClass(((Map) value).values(), actualTypeArguments.get(1)).getName();
                     }
 
+                    if (__types.contains("$$EnhancerByCGLIB")) {
+                        __types = __types.substring(0, __types.indexOf("$$EnhancerByCGLIB"));
+                    }
                     outputMap.put(p + "__java_reification", __types);
                 }
             }

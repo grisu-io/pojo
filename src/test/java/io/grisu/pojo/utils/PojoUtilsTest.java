@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.supportingclasses.*;
 import junit.framework.TestCase;
 import org.junit.Assert;
@@ -18,7 +19,7 @@ public class PojoUtilsTest {
     public void shouldInstanceAPojoFromAnother() {
         UUID uuid = UUID.randomUUID();
         Date date = new Date();
-        MyTestingClass fromEntity = new MyTestingClass().setKeyColumn(uuid).setCreatedAt(date);
+        MyTestingClass fromEntity = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(uuid).setCreatedAt(date);
         MyTestingClass instanced = PojoUtils.instancePojoFrom(MyTestingClass.class, fromEntity);
 
         Assert.assertEquals(uuid, instanced.getKeyColumn());
@@ -31,7 +32,7 @@ public class PojoUtilsTest {
     public void shouldInstanceAPojoWithDifferentClassFromAnother() {
         UUID uuid = UUID.randomUUID();
         Date date = new Date();
-        MyTestingClass fromEntity = new MyTestingClass().setKeyColumn(uuid).setCreatedAt(date);
+        MyTestingClass fromEntity = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(uuid).setCreatedAt(date);
         AnotherPojo instanced = PojoUtils.instancePojoFrom(AnotherPojo.class, fromEntity);
 
         Assert.assertEquals(uuid, instanced.getKeyProperty());
@@ -42,19 +43,19 @@ public class PojoUtilsTest {
     public void shouldInstanceAPojoWithWrapperInstanceClass() {
         UUID uuid = UUID.randomUUID();
         Date date = new Date();
-        AnotherPojoAgain pojo = new AnotherPojoAgain().setDummyVar("dummy");
+        AnotherPojoAgain pojo = AbstractPojo.instance(AnotherPojoAgain.class).setDummyVar("dummy");
 
-        MyTestingClassAgain fromEntity = new MyTestingClassAgain()
+        MyTestingClassAgain fromEntity = AbstractPojo.instance(MyTestingClassAgain.class)
             .setKeyColumn(uuid)
             .setCreatedAt(date)
             .setPojo(pojo)
-            .setListOfPojos(Arrays.asList(new AnotherPojoAgain().setDummyVar("a"), new AnotherPojoAgain().setDummyVar("b")));
+            .setListOfPojos(Arrays.asList(AbstractPojo.instance(AnotherPojoAgain.class).setDummyVar("a"), AbstractPojo.instance(AnotherPojoAgain.class).setDummyVar("b")));
         MyTestingClass instanced = PojoUtils.instancePojoFrom(MyTestingClass.class, fromEntity);
 
-        Assert.assertEquals(AnotherPojo.class, PojoUtils.getPojoClass(instanced.getPojo().getClass()));
+        Assert.assertEquals(AnotherPojo.class, PojoUtils.getCGLibUnwrappedClass(instanced.getPojo().getClass()));
         Assert.assertEquals("dummy", instanced.getPojo().getDummyVar());
         Assert.assertEquals(2, instanced.getListOfPojos().size());
-        Assert.assertEquals(AnotherPojo.class, PojoUtils.getPojoClass(instanced.getListOfPojos().get(0).getClass()));
+        Assert.assertEquals(AnotherPojo.class, PojoUtils.getCGLibUnwrappedClass(instanced.getListOfPojos().get(0).getClass()));
         Assert.assertEquals("a", instanced.getListOfPojos().get(0).getDummyVar());
         Assert.assertEquals("b", instanced.getListOfPojos().get(1).getDummyVar());
     }
@@ -63,9 +64,9 @@ public class PojoUtilsTest {
     public void shouldCloneAPojo() {
         UUID uuid = UUID.randomUUID();
         Date date = new Date();
-        List<TestPojo> innerPojos = Arrays.asList(new TestPojo().setString("inner"));
+        List<TestPojo> innerPojos = Arrays.asList(AbstractPojo.instance(TestPojo.class).setString("inner"));
 
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
 
         testPojo.setUuid(uuid);
         testPojo.setDate(date);
@@ -79,13 +80,13 @@ public class PojoUtilsTest {
 
     @Test
     public void shouldReturnOnlyNullKeys() {
-        final MyTestingClass myTestingClass = new MyTestingClass().setKeyColumn(UUID.randomUUID());
+        final MyTestingClass myTestingClass = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(UUID.randomUUID());
         Assert.assertEquals(5, PojoUtils.checkForNullProperties(myTestingClass, "key", "value", "date", "roles", "pojo", "list").size());
     }
 
     @Test
     public void shouldReturnNoKeys() {
-        final MyTestingClass myTestingClass = new MyTestingClass().setKeyColumn(UUID.randomUUID());
+        final MyTestingClass myTestingClass = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(UUID.randomUUID());
         Assert.assertEquals(0, PojoUtils.checkForNullProperties(myTestingClass, "key").size());
     }
 

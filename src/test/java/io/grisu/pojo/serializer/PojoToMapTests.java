@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.supportingclasses.TestPojo;
 import io.grisu.pojo.supportingclasses.UserStatus;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoStringAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         testPojo.setString("value");
 
         final Map<String, Object> convert = PojoToMap.convert(testPojo);
@@ -25,7 +26,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoUUIDAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         UUID uuid = UUID.randomUUID();
         testPojo.setUuid(uuid);
 
@@ -37,7 +38,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoDateAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         Date date = new Date();
         testPojo.setDate(date);
 
@@ -49,7 +50,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoNumberAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         Long number = 2L;
         testPojo.setNumber(number);
 
@@ -61,7 +62,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoListOfStringByInterfaceAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         List<String> list = new ArrayList<>();
         list.add("str1");
         list.add("str2");
@@ -77,7 +78,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoListOfStringByClassAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         ArrayList<String> list = new ArrayList<>();
         list.add("str1");
         list.add("str2");
@@ -93,7 +94,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoSetOfStringByInterfaceAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         Set<String> set = new HashSet<>();
         set.add("str1");
         set.add("str2");
@@ -109,7 +110,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoSetOfStringByClassAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         HashSet<String> set = new HashSet<>();
         set.add("str1");
         set.add("str2");
@@ -125,7 +126,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoSetOfEnumByInterfaceAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         Set<UserStatus> set = new HashSet<>();
         set.add(UserStatus.ACTIVE);
         set.add(UserStatus.FROZEN);
@@ -140,7 +141,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoSetOfEnumByClassAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         HashSet<UserStatus> set = new HashSet<>();
         set.add(UserStatus.ACTIVE);
         set.add(UserStatus.FROZEN);
@@ -155,9 +156,9 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoMapOfStringByInterfaceAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         Map<String, Object> map = new HashMap<>();
-        map.put("k1", new TestPojo().setString("inner pojo"));
+        map.put("k1", AbstractPojo.instance(TestPojo.class).setString("inner pojo"));
 
         testPojo.setMapOfStringByInterface(map);
 
@@ -169,9 +170,9 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoListOfPojoByClassAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         ArrayList<TestPojo> list = new ArrayList<>();
-        list.add(new TestPojo().setString("inner pojo"));
+        list.add(AbstractPojo.instance(TestPojo.class).setString("inner pojo"));
 
         testPojo.setInner(list);
 
@@ -183,7 +184,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoListOfTypeAttributeIntoMap() {
-        TestPojo<String> testPojo = new TestPojo<>();
+        TestPojo<String> testPojo = AbstractPojo.instance(TestPojo.class);
         ArrayList<String> list = new ArrayList<>();
         list.add("str1");
         list.add("str2");
@@ -200,7 +201,7 @@ public class PojoToMapTests {
 
     @Test
     public void shouldConvertPojoLocalDateAttributeIntoMap() {
-        TestPojo testPojo = new TestPojo();
+        TestPojo testPojo = AbstractPojo.instance(TestPojo.class);
         LocalDate localDate = LocalDate.of(1972, 9, 1);
         testPojo.setLocalDate(localDate);
 

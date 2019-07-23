@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
 
+import io.grisu.pojo.AbstractPojo;
 import io.grisu.pojo.supportingclasses.NodeSubType;
 import io.grisu.pojo.supportingclasses.PagedResult;
 import io.grisu.pojo.supportingclasses.ParameterizedPojo;
@@ -77,7 +78,7 @@ public class JSONUtilsTests {
 
     @Test
     public void shouldEncodeAndDecodeMapOfParameters() throws Exception {
-        TestPojo pojo = new TestPojo().setString("test pojo");
+        TestPojo pojo = AbstractPojo.instance(TestPojo.class).setString("test pojo");
         Map<String, TestPojo> map = new HashMap<>();
         map.put("mypojo", pojo);
         Object[] params = new Object[] { map };
@@ -91,10 +92,10 @@ public class JSONUtilsTests {
 
     @Test
     public void shouldEncodeAndDecodeParameterizedPojo() {
-        ParameterizedPojo<TestPojo> pojo = new ParameterizedPojo<>();
+        ParameterizedPojo<TestPojo> pojo = AbstractPojo.instance(ParameterizedPojo.class);
 
         pojo.mapOfT = new HashMap<>();
-        pojo.mapOfT.put("A", new TestPojo().setString("AA"));
+        pojo.mapOfT.put("A", AbstractPojo.instance(TestPojo.class).setString("AA"));
 
         Object[] params = new Object[] { pojo };
         final byte[] bytes = JSONUtils.encode(params);
@@ -104,15 +105,15 @@ public class JSONUtilsTests {
         ParameterizedPojo pr = (ParameterizedPojo) decodedParams[0];
 
         Map<String, TestPojo> i = pr.mapOfT;
-        assertEquals(TestPojo.class, i.get("A").getClass());
+        assertEquals(TestPojo.class, PojoUtils.getCGLibUnwrappedClass(i.get("A").getClass()));
     }
 
     @Test
     public void shouldEncodeAndDecodePagedResults() throws Exception {
-        TestPojo pojo = new TestPojo();
+        TestPojo pojo = AbstractPojo.instance(TestPojo.class);
         pojo.setString("My property");
 
-        final PagedResult<TestPojo> pagedResult = new PagedResult().setResults(Arrays.asList(pojo));
+        final PagedResult<TestPojo> pagedResult = AbstractPojo.instance(PagedResult.class).setResults(Arrays.asList(pojo));
 
         Object[] params = new Object[] { pagedResult };
         final byte[] bytes = JSONUtils.encode(params);
@@ -126,8 +127,8 @@ public class JSONUtilsTests {
     public void shouldEncodeAndDecodeComplexParameters() throws Exception {
         final UUID uuid = UUID.randomUUID();
         Date date = new Date();
-        TestPojo pojo = new TestPojo().setString("inner");
-        TestPojo pojo2 = new TestPojo().setString("inner2");
+        TestPojo pojo = AbstractPojo.instance(TestPojo.class).setString("inner");
+        TestPojo pojo2 = AbstractPojo.instance(TestPojo.class).setString("inner2");
         Map<String, TestPojo> map = new HashMap<>();
         map.put("mypojo", pojo2);
         List<String> list = Arrays.asList("string 1", "string 2");

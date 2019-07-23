@@ -29,7 +29,7 @@ public class AbstractPojo implements Pojo {
 
     @SuppressWarnings("unchecked")
     public static <T extends Pojo> T instance(Class<T> c) {
-        return (T) Enhancer.create(c, (MethodInterceptor) (obj, method, args, proxy) -> {
+        return (T) Enhancer.create(PojoUtils.getCGLibUnwrappedClass(c), (MethodInterceptor) (obj, method, args, proxy) -> {
             AbstractPojo pojo = (AbstractPojo) obj;
             String methodName = method.getName();
             if (methodName.startsWith("set")) {
@@ -55,7 +55,11 @@ public class AbstractPojo implements Pojo {
         });
     }
 
-    protected AbstractPojo() {
+    public AbstractPojo() {
+        if (!this.getClass().getName().contains("$$EnhancerByCGLIB")) {
+            throw new UnsupportedOperationException();
+        }
+
         properties = new LinkedHashSet<>();
         mapOfFields = new HashMap<>();
         mapOfTypes = new HashMap<>();
@@ -64,7 +68,7 @@ public class AbstractPojo implements Pojo {
         hashes = new HashMap<>();
         changedProperties = new HashSet<>();
 
-        Class<? extends AbstractPojo> aClass = PojoUtils.getPojoClass(this.getClass());
+        Class<? extends AbstractPojo> aClass = PojoUtils.getCGLibUnwrappedClass(this.getClass());
 
         for (Field field : aClass.getDeclaredFields()) {
             final Property annotation = field.getAnnotation(Property.class);
