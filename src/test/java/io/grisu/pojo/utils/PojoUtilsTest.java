@@ -51,10 +51,10 @@ public class PojoUtilsTest {
             .setListOfPojos(Arrays.asList(new AnotherPojoAgain().setDummyVar("a"), new AnotherPojoAgain().setDummyVar("b")));
         MyTestingClass instanced = PojoUtils.instancePojoFrom(MyTestingClass.class, fromEntity);
 
-        Assert.assertEquals(AnotherPojo.class, instanced.getPojo().getClass());
+        Assert.assertEquals(AnotherPojo.class, PojoUtils.getPojoClass(instanced.getPojo().getClass()));
         Assert.assertEquals("dummy", instanced.getPojo().getDummyVar());
         Assert.assertEquals(2, instanced.getListOfPojos().size());
-        Assert.assertEquals(AnotherPojo.class, instanced.getListOfPojos().get(0).getClass());
+        Assert.assertEquals(AnotherPojo.class, PojoUtils.getPojoClass(instanced.getListOfPojos().get(0).getClass()));
         Assert.assertEquals("a", instanced.getListOfPojos().get(0).getDummyVar());
         Assert.assertEquals("b", instanced.getListOfPojos().get(1).getDummyVar());
     }

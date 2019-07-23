@@ -24,7 +24,7 @@ public class PojoUtils {
 
     public static <T extends Pojo> T instancePojoFrom(Class<T> pojoClass, Gettable from) {
         try {
-            return copyIntoPojoFrom(pojoClass.getConstructor().newInstance(), from);
+            return copyIntoPojoFrom(AbstractPojo.instance(pojoClass), from);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +37,7 @@ public class PojoUtils {
     @SuppressWarnings("unchecked")
     public static <T extends Pojo> T copyIntoPojoFrom(T to, Gettable from) {
         if (from != null) {
-            final Map<String, Type> mapOfClassForProperties = Arrays.stream(to.getClass().getDeclaredFields())
+            final Map<String, Type> mapOfClassForProperties = Arrays.stream(getPojoClass(to.getClass()).getDeclaredFields())
                 .filter(field -> field.getAnnotation(Property.class) != null)
                 .collect(Collectors.toMap(f -> f.getAnnotation(Property.class).name(), Field::getGenericType));
 
@@ -133,4 +133,12 @@ public class PojoUtils {
 
         return null;
     }
+
+    public static Class getPojoClass(Class<? extends Pojo> aClass) {
+        while (!aClass.getSuperclass().equals(AbstractPojo.class) && !aClass.getSuperclass().equals(Object.class)) {
+            aClass = (Class<? extends AbstractPojo>) aClass.getSuperclass();
+        }
+        return aClass;
+    }
+
 }

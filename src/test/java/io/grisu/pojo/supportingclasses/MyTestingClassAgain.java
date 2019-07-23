@@ -29,9 +29,6 @@ public class MyTestingClassAgain extends AbstractPojo {
     @Property(name = "list")
     private List<AnotherPojoAgain> listOfPojos;
 
-    public MyTestingClassAgain() {
-    }
-
     public MyTestingClassAgain setKeyColumn(UUID key) {
         this.keyColumn = key;
         return this;

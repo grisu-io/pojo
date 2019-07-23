@@ -13,9 +13,6 @@ public class AnotherPojo extends AbstractPojo {
     @Property(name = "dummy")
     private String dummyVar;
 
-    public AnotherPojo() {
-    }
-
     public UUID getKeyProperty() {
         return keyProperty;
     }

@@ -55,7 +55,7 @@ public class AbstractPojoTest {
     @Test
     public void shouldReturnOneChangedProperty() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = (MyTestingClass) ((MyTestingClass) new MyTestingClass().put("key", key)).put("value", "value");
+        MyTestingClass a = (MyTestingClass) ((MyTestingClass) AbstractPojo.instance(MyTestingClass.class).put("key", key)).put("value", "value");
         a.__resetHashes();
         a.setValueColumn("new value");
         Assert.assertEquals(1, PojoUtils.changedProperties(a).size());
@@ -65,7 +65,7 @@ public class AbstractPojoTest {
     @Test
     public void shouldReportChangedPropertiesThroughSetters() {
         final UUID key = UUID.randomUUID();
-        MyTestingClass a = new MyTestingClass().setKeyColumn(key).setValueColumn("value");
+        MyTestingClass a = AbstractPojo.instance(MyTestingClass.class).setKeyColumn(key).setValueColumn("value");
         Assert.assertEquals(2, PojoUtils.changedProperties(a).size());
     }
 

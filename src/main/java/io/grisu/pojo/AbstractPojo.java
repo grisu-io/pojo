@@ -3,14 +3,14 @@ package io.grisu.pojo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.grisu.pojo.annotations.Property;
+import io.grisu.pojo.utils.PojoUtils;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,16 +24,49 @@ public class AbstractPojo implements Pojo {
     private final Map<String, Method> serializers;
     private final Map<String, Method> deserializers;
     private final Map<String, Integer> hashes;
+    private final Set<String> changedProperties;
 
-    public AbstractPojo() {
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Pojo> T instance(Class<T> c) {
+        return (T) Enhancer.create(c, (MethodInterceptor) (obj, method, args, proxy) -> {
+            AbstractPojo pojo = (AbstractPojo) obj;
+            String methodName = method.getName();
+            if (methodName.startsWith("set")) {
+                if (args.length == 1) {
+                    final Method setterMethod = pojo.findMethod(method.getName(), args[0]);
+
+                    if (setterMethod != null) {
+                        pojo.mapOfFields
+                            .keySet()
+                            .stream()
+                            .filter(s ->
+                                pojo.mapOfFields.get(s)
+                                    .getName()
+                                    .equals(pojo.toLowercase(methodName.substring(3)))
+                            ).findFirst().ifPresent(propertyName ->
+                            pojo.markAsChanged(propertyName)
+                        );
+                    }
+                }
+            }
+
+            return proxy.invokeSuper(obj, args);
+        });
+    }
+
+    protected AbstractPojo() {
         properties = new LinkedHashSet<>();
         mapOfFields = new HashMap<>();
         mapOfTypes = new HashMap<>();
         serializers = new HashMap<>();
         deserializers = new HashMap<>();
         hashes = new HashMap<>();
+        changedProperties = new HashSet<>();
 
-        for (Field field : this.getClass().getDeclaredFields()) {
+        Class<? extends AbstractPojo> aClass = PojoUtils.getPojoClass(this.getClass());
+
+        for (Field field : aClass.getDeclaredFields()) {
             final Property annotation = field.getAnnotation(Property.class);
             if (annotation != null) {
                 String name = annotation.name();
@@ -42,16 +75,16 @@ public class AbstractPojo implements Pojo {
 
             /*
               Maps of serializers/deserializers
-\             */
+\           */
                 if (annotation.serializer()) {
                     Class serializedValueClass = annotation.serializerClass();
                     try {
-                        serializers.put(name, this.getClass().getDeclaredMethod("_" + name + "Out", field.getType()));
+                        serializers.put(name, aClass.getDeclaredMethod("_" + name + "Out", field.getType()));
                     } catch (Exception e) {
                         log.debug(e.getMessage());
                     }
                     try {
-                        deserializers.put(name, this.getClass().getDeclaredMethod("_" + name + "In", serializedValueClass));
+                        deserializers.put(name, aClass.getDeclaredMethod("_" + name + "In", serializedValueClass));
                     } catch (Exception e) {
                         log.debug(e.getMessage());
                     }
@@ -84,6 +117,8 @@ public class AbstractPojo implements Pojo {
 
     @Override
     public Object put(String name, Object value) {
+        changedProperties.add(name);
+
         if (value != null) {
             if (deserializers.containsKey(name)) {
                 try {
@@ -96,7 +131,7 @@ public class AbstractPojo implements Pojo {
             if (mapOfFields.containsKey(name)) {
                 Field property = mapOfFields.get(name);
                 String propertyName = property.getName();
-                final Method setterMethod = findMethod("set" + capitalizeString(propertyName), value);
+                final Method setterMethod = findMethod("set" + toUppercase(propertyName), value);
                 if (setterMethod != null) {
                     try {
                         setterMethod.invoke(this, value);
@@ -154,21 +189,19 @@ public class AbstractPojo implements Pojo {
         return value;
     }
 
+    private void markAsChanged(String propertyName) {
+        changedProperties.add(propertyName);
+    }
+
     @Override
     public boolean __hasChanged(String property) {
-        Integer hash = hashes.get(property);
-        if (hash == null) {
-            if (get(property) != null) {
-                return true;
-            }
-            return false;
-        }
-        return !hash.equals(__computeHash(property));
+        return changedProperties.contains(property);
     }
 
     @Override
     public void __resetHashes() {
         keySet().forEach(name -> hashes.put(name, __computeHash(name)));
+        changedProperties.clear();
     }
 
     @Override
@@ -238,7 +271,7 @@ public class AbstractPojo implements Pojo {
     private Method findGetter(Object name) {
         try {
             Field field = mapOfFields.get(name);
-            String capitalizedPropertyName = capitalizeString(field.getName());
+            String capitalizedPropertyName = toUppercase(field.getName());
             if (Boolean.class.isAssignableFrom(field.getType())) {
                 try {
                     return this.getClass().getDeclaredMethod("is" + capitalizedPropertyName);
@@ -251,8 +284,12 @@ public class AbstractPojo implements Pojo {
         }
     }
 
-    private String capitalizeString(String string) {
+    private String toUppercase(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    private String toLowercase(String string) {
+        return string.substring(0, 1).toLowerCase() + string.substring(1);
     }
 
 }
