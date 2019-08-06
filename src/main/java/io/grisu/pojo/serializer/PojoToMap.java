@@ -48,6 +48,10 @@ public class PojoToMap {
             return (U) ((LocalDate) o).format(DateTimeFormatter.ISO_DATE);
         }
 
+        if (o instanceof Optional) {
+            return (U) convert(((Optional) o).orElse(null));
+        }
+
         return (U) o;
     }
 

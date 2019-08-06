@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import io.grisu.pojo.supportingclasses.PojoWithOptional;
 import io.grisu.pojo.supportingclasses.TestPojo;
 import io.grisu.pojo.supportingclasses.UserStatus;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class PojoToMapTests {
 
@@ -208,6 +210,18 @@ public class PojoToMapTests {
 
         assertEquals(1, convert.keySet().size());
         assertEquals(localDate.format(DateTimeFormatter.ISO_DATE), convert.get("localDate"));
+    }
+
+    @Test
+    public void shouldConvertPojoOptionalStringIntoMap() {
+        final PojoWithOptional testPojo = new PojoWithOptional()
+            .setString(Optional.of("test"))
+            .setBool(Optional.empty());
+
+        final Map<String, Object> convert = PojoToMap.convert(testPojo);
+        assertEquals(2, convert.keySet().size());
+        assertEquals("test", convert.get("string"));
+        assertEquals(null, convert.get("bool"));
     }
 
 }

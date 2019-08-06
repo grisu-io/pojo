@@ -5,12 +5,13 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
 
+import io.grisu.pojo.supportingclasses.PojoWithOptional;
 import io.grisu.pojo.supportingclasses.TestPojo;
 import io.grisu.pojo.supportingclasses.UserStatus;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MapToPojoTests {
 
@@ -25,6 +26,16 @@ public class MapToPojoTests {
     }
 
     @Test
+    public void shouldConvertMapStringNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("string", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getString());
+    }
+
+    @Test
     public void shouldConvertMapUUIDAttributeIntoPojo() {
         UUID uuid = UUID.randomUUID();
         Map<String, Object> map = new HashMap<>();
@@ -33,6 +44,16 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
 
         assertEquals(uuid, convert.getUuid());
+    }
+
+    @Test
+    public void shouldConvertMapUUIDNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uuid", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getUuid());
     }
 
     @Test
@@ -46,6 +67,15 @@ public class MapToPojoTests {
     }
 
     @Test
+    public void shouldConvertLocalDateNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("localDate", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+        assertNull(convert.getLocalDate());
+    }
+
+    @Test
     public void shouldConvertMapDateAttributeIntoPojo() {
         Date date = new Date();
         Map<String, Object> map = new HashMap<>();
@@ -54,6 +84,16 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
 
         assertEquals(date, convert.getDate());
+    }
+
+    @Test
+    public void shouldConvertMapDateNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("date", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getDate());
     }
 
     @Test
@@ -78,6 +118,17 @@ public class MapToPojoTests {
     }
 
     @Test
+    public void shouldConvertMapNumberNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("number", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getNumber());
+    }
+
+
+    @Test
     public void shouldConvertMapListOfStringByInterfaceAttributeIntoPojo() {
         List<String> list = new ArrayList<>();
         list.add("str1");
@@ -93,6 +144,16 @@ public class MapToPojoTests {
     }
 
     @Test
+    public void shouldConvertMapListOfStringByInterfaceNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("listOfStringByInterface", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getListOfStringByInterface());
+    }
+
+    @Test
     public void shouldConvertMapListOfStringByClassAttributeIntoPojo() {
         ArrayList<String> list = new ArrayList<>();
         list.add("str1");
@@ -105,6 +166,16 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
 
         assertEquals(list, convert.getListOfStringByClass());
+    }
+
+    @Test
+    public void shouldConvertMapListOfStringByClassNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("listOfStringByClass", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getListOfStringByClass());
     }
 
     @Test
@@ -163,6 +234,16 @@ public class MapToPojoTests {
         final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
 
         assertEquals(set, convert.getSetOfEnumByClass());
+    }
+
+    @Test
+    public void shouldConvertMapSetOfEnumByClassNullAttributeIntoPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("setOfEnumByClass", null);
+
+        final TestPojo convert = (TestPojo) MapToPojo.convert(map, TestPojo.class);
+
+        assertNull(convert.getSetOfEnumByClass());
     }
 
     @Test
@@ -232,6 +313,28 @@ public class MapToPojoTests {
         assertEquals("inner pojo", ((TestPojo) convert.getListOfType().get(0)).getString());
         assertEquals(TestPojo.class, convert.getListOfType().get(1).getClass());
         assertEquals(TestPojo.class, convert.getListOfType().get(2).getClass());
+    }
+
+    @Test
+    public void shouldConvertOptionalPojo() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("string", "my string");
+        map.put("boolean", null);
+
+        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> innerMap = new HashMap<>();
+        innerMap.put("key", "inner pojo");
+        list.add(innerMap);
+        map.put("inner", list);
+
+        final PojoWithOptional convert = (PojoWithOptional) MapToPojo.convert(map, PojoWithOptional.class);
+
+        assertEquals("my string", convert.getString().get());
+        assertEquals("inner pojo", convert.getInner().get().get(0).getKey().get());
+
+        assertFalse(convert.getBool().isPresent());
+        assertNull(convert.getInteger());
+        assertNull(convert.getDate());
     }
 
 }

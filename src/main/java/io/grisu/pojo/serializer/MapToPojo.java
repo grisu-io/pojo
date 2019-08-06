@@ -19,6 +19,11 @@ public class MapToPojo {
     private static final Logger log = LoggerFactory.getLogger(MapToPojo.class);
 
     public static Object convert(Object value, Type type) {
+        if (type instanceof ParameterizedType &&
+            Optional.class.isAssignableFrom((Class) ((ParameterizedType) type).getRawType())) {
+            return handleOptional(value, ((ParameterizedType) type));
+        }
+
         if (value == null || value.getClass().equals(type)) {
             return value;
         }
@@ -51,7 +56,7 @@ public class MapToPojo {
                 return UUID.fromString((String) value);
             } else if (_clazz.equals(Date.class)) {
                 if (value instanceof Number) {
-                    return new Date(((Number)value).longValue());
+                    return new Date(((Number) value).longValue());
                 }
             } else if (_clazz.equals(LocalDate.class)) {
                 if (value instanceof Map) {
@@ -103,8 +108,8 @@ public class MapToPojo {
         }
 
         for (String property : newObject.keySet()) {
-            Object value = map.get(property);
-            if (value != null) {
+            if (map.containsKey(property)) {
+                Object value = map.get(property);
                 try {
                     Type type = newObject.__getTypeOf(property);
 
@@ -196,6 +201,13 @@ public class MapToPojo {
             .collect(Collectors.toMap(k -> convert(k, mapOf[0]), k -> convert(map.get(k), mapOf[1]), (u, v) -> {
                 throw new IllegalStateException(String.format("Duplicate key %s", u));
             }, () -> (Map) ReflectionUtils.instance((Class) parameterizedType.getRawType())));
+    }
+
+    private static Object handleOptional(Object value, ParameterizedType parameterizedType) {
+        if (value == null) {
+            return Optional.empty();
+        }
+        return Optional.of(convert(value, parameterizedType.getActualTypeArguments()[0]));
     }
 
 }

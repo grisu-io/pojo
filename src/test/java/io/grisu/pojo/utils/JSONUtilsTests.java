@@ -4,10 +4,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
 
-import io.grisu.pojo.supportingclasses.NodeSubType;
-import io.grisu.pojo.supportingclasses.PagedResult;
-import io.grisu.pojo.supportingclasses.ParameterizedPojo;
-import io.grisu.pojo.supportingclasses.TestPojo;
+import io.grisu.pojo.supportingclasses.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -178,4 +175,41 @@ public class JSONUtilsTests {
             new Type[] { String.class, String.class, String.class }
         );
     }
+
+    @Test
+    public void shouldEncodeAnEmptyOptional() {
+        final PojoWithOptional pojoWithOptional = new PojoWithOptional();
+        pojoWithOptional.setInner(Optional.of(Arrays.asList(new SimpleOptionalPojo())));
+        final byte[] bytes = JSONUtils.encode(pojoWithOptional);
+        assertEquals("{\"inner\":[{}]}", new String(bytes));
+    }
+
+    @Test
+    public void shouldEncodeAndDecodeOptionals() {
+        final PojoWithOptional pojoWithOptional = new PojoWithOptional();
+        pojoWithOptional.setBool(Optional.of(Boolean.TRUE))
+            .setDate(Optional.of(LocalDate.now()))
+            .setInteger(Optional.of(434))
+            .setString(Optional.of("test"))
+            .setInner(Optional.of(Arrays.asList(new SimpleOptionalPojo().setKey(Optional.of("inner string")))));
+
+        final byte[] bytes = JSONUtils.encode(pojoWithOptional);
+        final PojoWithOptional decode = JSONUtils.decode(bytes, PojoWithOptional.class);
+
+        assertEquals(pojoWithOptional.getDate(), decode.getDate());
+        assertEquals(pojoWithOptional.getBool(), decode.getBool());
+        assertEquals(pojoWithOptional.getInteger(), decode.getInteger());
+        assertEquals(pojoWithOptional.getString(), decode.getString());
+        assertEquals(pojoWithOptional.getInner(), decode.getInner());
+
+        assertEquals(pojoWithOptional, decode);
+    }
+
+    @Test
+    public void shouldEncodeOnlyNotNullFields() {
+        final TestPojo<Object> pojo = new TestPojo<>();
+        final byte[] bytes = JSONUtils.encode(pojo);
+        assertEquals("{}", new String(bytes));
+    }
+
 }
